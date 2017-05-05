@@ -1,0 +1,18 @@
+h1b= LOAD '/home/sowmya/Desktop/h1b-test' using  PigStorage('\t')  AS (s_no:int,case_status:chararray,employer_name:chararray,soc_name:chararray,job_title:chararray,full_time_position:chararray,prevailing_wage,year, worksite1:chararray, worksite2:chararray, longitute, latitute);
+aa = foreach h1b generate $0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11;
+Store aa into '/home/hduser/merge' using PigStorage('\t');
+fs -getmerge /home/hduser/join /home/hduser/project;
+
+create table h1b_app2 (s_no int,case_status string, employer_name string, soc_name string, job_title string, full_time_position string,prevailing_wage int,year string, worksite string, longitute double, latitute double) 
+row format delimited fields terminated by ',' 
+stored as textfile;
+
+INSERT OVERWRITE TABLE h1b_app2 SELECT regexp_replace(s_no, "\t", ""),
+regexp_replace(case_status, "\t", ""), regexp_replace(employer_name,
+"\t", ""), regexp_replace(soc_name, "\t", ""),
+regexp_replace(job_title, "\t", ""),
+regexp_replace(full_time_position, "\t", ""),
+regexp_replace(prevailing_wage, "\t", ""), regexp_replace(year, "\t",
+""), regexp_replace(worksite, "\t", ""), regexp_replace(longitute,
+"\t", ""), regexp_replace(latitute, "\t", "") FROM h1b_pro
+where case_status != "NA";

@@ -1,0 +1,24 @@
+HIVE
+-----
+
+1) Which are the top 10 job positions which have the highest success rate in petitions?
+
+
+select ROUND(((count(s_no)/t.tot)*100),2) as ctn,job_title from h1b_pro,(select count(s_no) as tot from h1b_pro)t where case_status ='CERTIFIED' or case_status= 'CERTIFIED-WITHDRAWN' group by job_title,t.tot order by ctn desc limit 10;
+
+
+2) Find the average Prevailing Wage for each Job for each Year (take part time and full time separate)
+
+select ROUND((AVG(prevailing_wage)),2), job_title,year,full_time_position from h1b_pro where full_time_position!='NULL' group by full_time_position,job_title,year order by full_time_position desc;
+
+3)  Which are top ten employers who have the highest success rate in petitions?
+
+select ROUND(((count(s_no)/t.tot)*100),2) as ctn,employer_name from h1b_pro,(select count(s_no) as tot from h1b_pro)t where case_status ='CERTIFIED' or case_status= 'CERTIFIED-WITHDRAWN' group by employer_name,t.tot order by ctn desc limit 10;
+
+4) Find the percentage and the count of each case status on total applications for each year. Create a graph depicting the pattern of All the cases over the period of time.
+
+select count(s_no) as count,round(((count(s_no)/t.tot)*100),2) as ctn,year,case_status from h1b_pro,(select count(s_no) as tot from h1b_pro)t where year!='NULL' or year!='NA' group by case_status,year,t.tot order by ctn desc; 
+
+
+
+
